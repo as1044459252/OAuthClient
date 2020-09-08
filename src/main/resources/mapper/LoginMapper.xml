@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.circles.bookstore.mapper.LoginMapper">
+
+    <select id="getAllCustomers" resultType="com.circles.bookstore.bean.Customer">
+        select * from customer
+    </select>
+
+    <select id="getCustomerById" parameterType="Integer" resultType="com.circles.bookstore.bean.Customer">
+        select * from customer where uid = #{id}
+    </select>
+
+    <select id="getCusByUsername" parameterType="String" resultType="com.circles.bookstore.bean.Customer">
+        select * from customer where username = #{username}
+    </select>
+
+    <insert id="addCustomer">
+        insert into customer (username,password,state) values (#{username},#{password},#{state})
+    </insert>
+
+    <select id="getAllAdmin"  resultType="com.circles.bookstore.bean.Administor">
+        select * from administor
+    </select>
+
+    <update id="updateCusInfo">
+        update customer set tel=#{tel},
+                            address=#{address}
+                            where uid = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.circles.bookstore.mapper.OrderMapper">
+
+    <select id="getAllOrder" resultType="com.circles.bookstore.bean.Order">
+        select * from order_tab
+    </select>
+
+    <select id="getOrderById" resultType="com.circles.bookstore.bean.Order">
+        select * from order_tab where orderId = #{id}
+    </select>
+
+    <select id="getAllCarts" resultType="string">
+        select cart from order_tab
+    </select>
+
+    <select id="getCartById" resultType="string">
+        select cart from order_tab where orderId = #{id}
+    </select>
+
+    <insert id="addOrder">
+        insert into order_tab (cart, time , state, orderUid, address) values (#{cart},#{time},#{state},#{orderUid},#{address})
+    </insert>
+
+    <!--update id="updateOrders">
+        update order_tab set cart = #{cart} where orderId = #{id};
+    </update-->
+
+</mapper>

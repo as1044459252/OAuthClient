@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>管理员</title>
+    <!-- for-mobile-apps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="Best Store Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+    function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- //for-mobile-apps -->
+    <link th:href="@{~/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+    <!-- js -->
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <!-- //js -->
+    <!-- cart -->
+    <!-- cart -->
+    <link rel="stylesheet" type="text/css" th:href="@{~/css/jquery-ui.css}">
+    <!-- for bootstrap working -->
+    <script type="text/javascript" th:src="@{~/js/bootstrap-3.1.1.min.js}"></script>
+    <!-- //for bootstrap working -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <!-- animation-effect -->
+    <link th:href="@{~/css/animate.min.css}" rel="stylesheet">
+    <script th:src="@{~/js/wow.min.js}"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <link th:href="@{~/css/fileinput.min.css}" media="all" rel="stylesheet" type="text/css" />
+    <link th:href="@{~/css/bootstrapValidator.css}"/>
+    <script th:src="@{~/js/fileinput.min.js}"></script>
+</head>
+
+<body>
+<!-- header -->
+<div class="header">
+    <div class="container">
+        <div class="header-grid">
+            <div class="header-grid-left animated wow slideInLeft" data-wow-delay=".5s">
+                <ul>
+                    <li><a th:text="${#strings.isEmpty(session.loginAdmin)}?'欢迎光临Cosmos':${session.loginAdmin.getUsername()}"></a></li>
+                    <!--这里判断session中是否有loginUser，如果没有则为注册登录，有则为个人中心与登出，上一行同理-->
+                    <!--th:if="${not #strings.isEmpty(err_msg)}" th:text="${err_msg}"-->
+                    <li><i class="glyphicon glyphicon-log-in" aria-hidden="true"></i>
+                        <a th:href="${#strings.isEmpty(session.loginAdmin)}? '/toLogin' : '/toLogout' "
+                           th:text="${#strings.isEmpty(session.loginAdmin)}?'登录':'登出'"></a></li>
+                </ul>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="logo-nav">
+            <div class="logo-nav-left animated wow zoomIn" data-wow-delay=".5s">
+                <h1><a th:href="@{/}">COSMOS<span></span></a></h1>
+            </div>
+            <div class="logo-nav-left1">
+                <nav class="navbar navbar-default">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header nav_2">
+                        <button type="button" class="navbar-toggle collapsed navbar-toggle1" data-toggle="collapse" data-target="#bs-megadropdown-tabs">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="" id="bs-megadropdown-tabs">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a th:href="@{/}" class="act">主页</a></li>
+                            <!-- Mega Menu -->
+                            <li>
+                                <a th:href="@{/toProducts}">全部产品</a>
+                                <!--ul class="dropdown-menu multi-column columns-3">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <ul class="multi-column-dropdown">
+                                                <h6>Men's Wear</h6>
+                                                <li><a th:href="@{toProducts}">查看全部</a></li>
+                                                <li><a href="products.html">Wallets</a></li>
+                                                <li><a href="products.html">Shoes</a></li>
+                                                <li><a href="products.html">Watches</a></li>
+                                                <li><a href="products.html">Accessories</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <ul class="multi-column-dropdown">
+                                                <h6>Women's Wear</h6>
+                                                <li><a href="products.html">Clothing</a></li>
+                                                <li><a href="products.html">Wallets,Bags</a></li>
+                                                <li><a href="products.html">Footwear</a></li>
+                                                <li><a href="products.html">Watches</a></li>
+                                                <li><a href="products.html">Accessories</a></li>
+                                                <li><a href="products.html">Jewellery</a></li>
+                                                <li><a href="products.html">Beauty & Grooming</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <ul class="multi-column-dropdown">
+                                                <h6>Kid's Wear</h6>
+                                                <li><a href="products.html">Kids Home Fashion</a></li>
+                                                <li><a href="products.html">Boy's Clothing</a></li>
+                                                <li><a href="products.html">Girl's Clothing</a></li>
+                                                <li><a href="products.html">Shoes</a></li>
+                                                <li><a href="products.html">Brand Stores</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </ul-->
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="cart box_1">
+                    <a href="/toCheckCart">
+                        <h3> <div class="total">
+                            <span class="simpleCart_total" id="totalPrice"  th:text="'￥'+${session.currentCart!=null?session.currentCart.getTotalPrice():'0'}"></span>
+                            (<span id="totalNum" class="simpleCart_quantity" th:text="${session.currentCart!=null?session.currentCart.getBooks().size():'0'}"></span> items)</div>
+                            <img src="images/bag.png" alt="" />
+                        </h3>
+                    </a>
+                    <div class="clearfix"> </div>
+                </div>
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+    </div>
+</div>
+<!-- //header -->
+<!-- login -->
+<div class="cusInfo">
+    <div class="container">
+        <div class="row">
+            <!--导航栏-->
+              <ul class="nav nav-tabs nav-stacked col-md-2" role="tablist">
+                <!--一个下拉菜单-->
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown"
+                       href="#" role="button">书籍管理<span class="caret"></span></a>
+                    <ul role="presentation" class="dropdown-menu" >
+                        <li><a href="#addBook" role="tab" data-toggle="tab">添加书籍</a></li>
+                        <li><a href="#manageBook" role="tab" data-toggle="tab">管理书籍</a></li>
+                    </ul>
+                </li>
+
+                <li role="presentation" class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown"
+                       href="#" role="button">账号管理<span class="caret"></span></a>
+                    <ul role="presentation" class="dropdown-menu" >
+                        <li><a href="#manageUser" role="tab" data-toggle="tab">管理账号</a></li>
+                    </ul>
+                </li>
+
+                  <li role="presentation" class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown"
+                         href="#" role="button">订单管理<span class="caret"></span></a>
+                      <ul role="presentation" class="dropdown-menu" >
+                          <li><a href="#manageOrder" role="tab" data-toggle="tab">管理订单</a></li>
+                      </ul>
+                  </li>
+            </ul>
+
+
+            <!--导航栏对应不同的面板div标签-->
+            <div class="tab-content col-md-10">
+                <div role="tabpanel" class="tab-pane active" id="addBook">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">书籍信息</div>
+                        <form id=“bookForm” th:action="@{/addBook}" th:method="post" enctype="multipart/form-data">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th>书名</th>
+                                <th><input type="text" th:name="bookName"></th>
+                            </tr>
+                            <tr>
+                                <th>作者</th>
+                                <th><input type="text" th:name="writer"></th>
+                            </tr>
+                            <tr>
+                                <th>描述</th>
+                                <th><input type="text" th:name="description"></th>
+                            </tr>
+                            <tr>
+                                <th>图片地址</th>
+                                <th><input id="upload" type="file" th:name="img" class="file" accept="image/*"></th>
+                            </tr>
+                            <tr>
+                                <th>价格</th>
+                                <th><input type="number" min="1.00" step="0.01" th:name="price"></th>
+                                <th><p th:text="${msg}" style="color: red"/></th>
+                                <th><input type="submit" value="确定" class="btn btn-primary"></th>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        </form>
+
+                    </div>
+                </div>
+
+                <div role="tabpanel" class="tab-pane" id="manageBook">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">书籍信息</div>
+                        <table class="table" id="bookTable">
+                            <thead>
+                                <tr>
+                                    <th>书籍id</th>
+                                    <th>书名</th>
+                                    <th>作者</th>
+                                    <th>描述</th>
+                                    <th>图片地址</th>
+                                    <th>价格</th>
+                                    <th>评分</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--通过js或者json实现? 操作下面提供一个checkbox-->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="container">
+                    <nav aria-label="Page navigation" class="col-md-3 col-md-offset-3">
+                        <ul class="pagination" id="pageUl">
+                            <li><a href="#">1</a></li>
+                        </ul>
+                    </nav>
+                    </div>
+                    <button class="btn btn-primary" id="selectAll">查询全部</button>
+
+
+                    <button class="btn btn-primary" id="updateBtn" aria-labelledby="myModalLabel">修改</button>
+                    <!--模态框-->
+                    <div class="modal fade" id="updateBookModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">修改书籍信息</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id=“updateBookForm” th:action="@{/admin/exeUpdateBook}" th:method="post" enctype="multipart/form-data">
+                                        <table class="table">
+                                            <tbody>
+                                            <tr>
+                                                <th>书名</th>
+                                                <th><input type="text" th:name="updateBookName"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>作者</th>
+                                                <th><input type="text" th:name="updateWriter"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>描述</th>
+                                                <th><input type="text" th:name="updateDescription"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>图片地址</th>
+                                                <th><input id="updateUpload" type="file" th:name="updateImg" class="file" accept="image/*"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>价格</th>
+                                                <th><input type="number" min="1.00" step="0.01" th:name="updatePrice"></th>
+                                            </tr>
+                                            <tr>
+                                                <th>评分</th>
+                                                <th><input type="number" min="1.00" max="5.00" step="0.01" th:name="updateScore"></th>
+                                                <th><input type="submit" value="提交修改" id="exeUpdateBtn" class="btn btn-primary"></th>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="deleteBtn">删除</button>
+                    <input type="text" id="searchInput" placeholder="请输入书籍书名或作者相关信息"><button class="btn btn-primary" id="searchBtn">搜索</button>
+                </div>
+
+
+                <div role="tabpanel" class="tab-pane" id="manageOrder">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">订单信息</div>
+                            <table class="table" id="orderTable">
+                                <thead>
+                                <tr>
+                                    <th>订单ID</th>
+                                    <th>订单UID</th>
+                                    <th>顾客ID</th>
+                                    <th>购物车信息</th>
+                                    <th>时间</th>
+                                    <th>总价格</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!--通过js或者json实现? 操作下面提供一个checkbox-->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="container">
+                            <nav aria-label="Page navigation" class="col-md-3 col-md-offset-3">
+                                <ul class="pagination" id="orderPageUl">
+                                    <li><a href="#">1</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <button class="btn btn-primary" id="selectAllOrders">查询全部</button>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="manageUser">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">用户名</div>
+                        <table class="table" id="userTable">
+                            <thead>
+                            <tr>
+                                <th>用户ID</th>
+                                <th>用户名</th>
+                                <th>密码</th>
+                                <th>电话</th>
+                                <th>状态</th>
+                                <th>地址</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--通过js或者json实现? 操作下面提供一个checkbox-->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="container">
+                        <nav aria-label="Page navigation" class="col-md-3 col-md-offset-3">
+                            <ul class="pagination" id="userPageUl">
+                                <li><a href="#">1</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <button class="btn btn-primary" id="selectAllUsers">查询全部</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- //login -->
+<!-- footer -->
+<div th:include="index::footer">
+</div>
+</body>
+<script th:src="@{~/js/adminInit.js}"></script>
+<script th:inline="javascript">initFileInput("upload");initFileInput("updateUpload");
+</script>
+</html>

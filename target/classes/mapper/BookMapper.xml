@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.circles.bookstore.mapper.BookMapper">
+
+    <select id="getAllBooks" resultType="Book">
+        select * from book
+    </select>
+
+    <select id="getBookById" resultType="Book">
+        select * from book where bookId = #{id}
+    </select>
+
+    <select id="searchBooks" resultType="Book">
+        select * from book where name like CONCAT('%',#{words},'%') or writer like CONCAT('%',#{words},'%')
+    </select>
+
+    <insert id="addBook">
+        insert into book (name,writer,description,imgUrl,price) values (#{bookName},#{writer},#{description},#{imgUrl},#{price})
+    </insert>
+
+    <delete id="deleteBook" parameterType="int">
+        delete from book where bookId = #{id}
+    </delete>
+
+    <update id="updateBook">
+        update book set name = #{bookName},
+                        writer = #{writer},
+                        description = #{description},
+                        imgUrl = #{imgUrl},
+                        price = #{price},
+                        score = #{score} where bookId = #{id}
+    </update>
+
+    <select id="getOnePageBooksById" resultType="Book">
+        select * from book order by bookId limit #{bookNumOnePage} offset #{currentPage}
+    </select>
+
+    <insert id="addCusBookScore">
+        insert into cus_book_score (customerId, bookId, score) values (#{customerId},#{bookId},#{score});
+    </insert>
+    
+    <select id="getCusBookScoreByCusId" resultType="CusBookScore">
+        select * from cus_book_score where customerId = #{customerId}
+    </select>
+
+    <select id="getCusBookScoreByBookId" resultType="CusBookScore">
+        select * from cus_book_score where bookId = #{bookId}
+    </select>
+
+    <select id="getAllCusBookScore" resultType="CusBookScore">
+        select * from cus_book_score
+    </select>
+    <update id="updateScore">
+        update book set score = #{score} where bookId = #{bookId}
+    </update>
+
+</mapper>

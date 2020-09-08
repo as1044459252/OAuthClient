@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.circles.bookstore.mapper.CartMapper">
+
+    <select id="getAllCarts" resultType="com.circles.bookstore.bean.Cart">
+        select * from cart
+    </select>
+
+    <select id="getCartById" resultType="com.circles.bookstore.bean.Cart">
+        select * from cart where customerId = #{id}
+    </select>
+
+    <select id="getBooksById" resultType="string">
+        select books from cart where customerId = #{id}
+    </select>
+
+    <select id="getAllId" resultType="Integer">
+        select customerId from cart
+    </select>
+
+    <select id="getMapById" resultType="string">
+        select bookAndNumMaps from cart where customerId = #{id}
+    </select>
+
+    <select id="getPriceById" resultType="Double">
+        select totalPrice from cart where customerId = #{id}
+    </select>
+
+    <insert id="addCart">
+        insert into cart (customerId, books, bookAndNumMaps) values (#{customerId},#{books},#{bookAndNumMaps})
+    </insert>
+
+    <update id="updateCart">
+        update cart set books = #{books},
+                        bookAndNumMaps = #{bookAndNumMaps},
+                        totalPrice = #{price}
+                         where customerId = #{customerId}
+    </update>
+</mapper>

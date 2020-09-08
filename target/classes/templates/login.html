@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>登录</title>
+<!-- for-mobile-apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Best Store Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false);
+		function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //for-mobile-apps -->
+<link th:href="@{~/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+<link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+<!-- js -->
+<script th:src="@{~/js/jquery.min.js}"></script>
+<!-- //js -->
+<!-- cart -->
+<!-- cart -->
+<link rel="stylesheet" type="text/css" th:href="@{~/css/jquery-ui.css}">
+<!-- for bootstrap working -->
+	<script type="text/javascript" th:src="@{~/js/bootstrap-3.1.1.min.js}"></script>
+<!-- //for bootstrap working -->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+<!-- animation-effect -->
+<link th:href="@{~/css/animate.min.css}" rel="stylesheet">
+<script th:src="@{~/js/wow.min.js}"></script>
+<script>
+ new WOW().init();
+</script>
+<!-- //animation-effect -->
+</head>
+	
+<body>
+<!-- header -->
+	<div th:include="index::header">
+	</div>
+
+<!-- //header -->
+<!-- breadcrumbs -->
+	<!--div class="breadcrumbs">
+		<div class="container">
+			<ol class="breadcrumb breadcrumb1 animated wow slideInLeft" data-wow-delay=".5s">
+				<li><a th:href="@{/toIndex}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>回到主页</a></li>
+				<li class="active">登录</li>
+			</ol>
+		</div>
+	</div-->
+<!-- //breadcrumbs -->
+<!-- login -->
+	<div class="login">
+		<div class="container">
+			<h3 class="animated wow zoomIn" data-wow-delay=".5s">登录</h3>
+			<p class="est animated wow zoomIn" data-wow-delay=".5s" style="color: red" th:if="${not #strings.isEmpty(err_msg)}" th:text="${err_msg}"></p>
+			<p class="est animated wow zoomIn" data-wow-delay=".5s" style="color: red" th:if="${not #strings.isEmpty(reg_suc_msg)}" th:text="${reg_suc_msg}"></p>
+			<div class="login-form-grids animated wow slideInUp" data-wow-delay=".5s">
+				<form th:action="@{/login}" th:method="post">
+					<input type="text" th:name="username" placeholder="用户名" required=" " >
+					<input type="password" th:name="password" placeholder="密码" required=" " >
+					<div class="forgot">
+						<a href="#">忘记密码?</a>
+					</div>
+					<input type="submit" value="登录">
+					<div class="isAdmin">
+						<label class	="checkbox">
+							<input type="checkbox" th:name="isAdmin">
+							<i> </i>管理员模式登录
+						</label>
+					</div>
+				</form>
+			</div>
+			<h4 class="animated wow slideInUp" data-wow-delay=".5s">没有账号？</h4>
+			<p class="animated wow slideInUp" data-wow-delay=".5s">
+				<a th:href="@{/toOauthQQLogin}" > 使用qq登录</a>
+			</p>
+			<p class="animated wow slideInUp" data-wow-delay=".5s"><a th:href="@{/toRegister}" > 点此注册</a> 或者 <a th:href="@{/toIndex}">回到主页<span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span></a></p>
+		</div>
+	</div>
+<!-- //login -->
+<!-- footer -->
+<div th:include="index::footer">
+</div>
+<!-- //footer -->
+</body>
+</html>
