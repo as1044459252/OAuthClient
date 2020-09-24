@@ -40,7 +40,7 @@ public class LoginController {
 
     //LoginService loginService = new LoginService();
     //顾客登录成功/失败控制器
-    @RequestMapping("/login")
+    /*@RequestMapping("/login")
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
                         @RequestParam(required = false) String isAdmin,
@@ -85,10 +85,10 @@ public class LoginController {
         }
         model.addAttribute("err_msg","用户名或者密码错误");
         return "login";
-    }
+    }*/
 
     //注册成功/失败控制器，其中输入密码是否相同最好使用js判断。
-    @RequestMapping("/register")
+    /*@RequestMapping("/register")
     public String register(@RequestParam("username") String username,
                            @RequestParam("password") String password,
                            @RequestParam("ack_password") String ack_password,
@@ -99,12 +99,6 @@ public class LoginController {
             model.addAttribute("reg_err_msg","两次输入的密码不匹配，请重试");
             return "register";
         }
-
-        //用户名密码不符合规范判断，暂未实现，可以使用表达式
-        /*if(){
-            model.addAttribute("reg_err_msg","用户名和密码不符合规范，请重试");
-        }*/
-
         for(Customer user:users){
             if(user.getUsername().equals(username)) {
                 model.addAttribute("reg_err_msg", "用户名已存在，请重试");
@@ -114,7 +108,7 @@ public class LoginController {
         }loginService.addCustomer(username,password);
         model.addAttribute("reg_suc_msg","注册成功，现在登录吧");
         return "login";
-    }
+    }*/
 
 
     /*

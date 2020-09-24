@@ -1,5 +1,6 @@
 package com.circles.bookstore.controller.oauthController;
 
+import com.alibaba.fastjson.JSONObject;
 import com.circles.bookstore.bean.Customer;
 import com.circles.bookstore.bean.User;
 import com.circles.bookstore.bean.oauthClient.Constant;
@@ -20,6 +21,7 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.SessionScope;
@@ -37,8 +39,11 @@ import javax.servlet.http.HttpSession;
 public class oauthLoginController {
     @Autowired
     LoginService loginService;
+
+    String qqNumber="";
     //点击使用QQ登录之后，RP使用302让用户转向QQ登录页面
     @RequestMapping("/toOauthQQLogin")
+    @ResponseBody
     public String toQQLogin(HttpServletResponse response){
         String state = RandomStringUtils.randomAlphanumeric(16);
         try {
@@ -52,12 +57,12 @@ public class oauthLoginController {
             //把state放进cookie里
             Cookie cookie = new Cookie("state",state);
             response.addCookie(cookie);
-            return "redirect:"+request.getLocationUri();
+            return request.getLocationUri();
         }
         catch (OAuthSystemException e){
             e.printStackTrace();
         }
-        return "oauthLogin";
+        return null;
     }
 
     //RP收到code和state后，检查state并用code去交换token
@@ -89,18 +94,37 @@ public class oauthLoginController {
 
     @RequestMapping("/authorize/getUserInfo")
     @ResponseBody
-    public String getUserInfo(String accessToken, HttpSession session){
+    public String getUserInfo(String accessToken,HttpSession session){
         OAuthClient client = new OAuthClient(new URLConnectionClient());
         try {
             OAuthClientRequest clientRequest = new OAuthBearerClientRequest(Constant.userInfoUrl)
                     .setAccessToken(accessToken).buildQueryMessage();
             OAuthResourceResponse resourceResponse = client.resource(clientRequest,OAuth.HttpMethod.GET,OAuthResourceResponse.class);
-            String qqNumber = resourceResponse.getBody();
-            return  qqNumber;
+            String currentQqNumber = resourceResponse.getBody();
+            qqNumber = currentQqNumber;
+            return  "登录成功，请关闭页面";
         } catch (OAuthSystemException | OAuthProblemException e) {
             e.printStackTrace();
         }
         return "error";
+    }
+
+    @RequestMapping("/register")
+    @ResponseBody
+    public String register(@RequestBody JSONObject jsonObject){
+       // String username = jsonObject.getString("username");
+        System.out.println(jsonObject);
+        return "registing...";
+    }
+
+    @RequestMapping("/checkLogin")
+    @ResponseBody
+    public String checkLogin(HttpSession session){
+        // String username = jsonObject.getString("username")
+        if(qqNumber!="")
+            return qqNumber;
+        else
+            return "error";
     }
 }
 
