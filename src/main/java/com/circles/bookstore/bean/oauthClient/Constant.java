@@ -8,5 +8,4 @@ public class Constant {
     public static final String authorizationLocation = "http://localhost:8082/myQQ";
     public static final String accessTokenUrl = "http://localhost:8082/getToken";
     public static final String userInfoUrl = "http://localhost:8082/getUserInfo";
-
 }

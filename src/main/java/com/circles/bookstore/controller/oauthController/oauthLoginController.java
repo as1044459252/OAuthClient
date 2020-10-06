@@ -30,28 +30,39 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
 
 /*
 这个controller属于RP
 类中的许多常量都可以放在常量类中，有需要再改动
+
+其中的.replace()都是用来方便本地手机开发的，项目真正发布之后就可以删掉
  */
 @Controller
 public class oauthLoginController {
     @Autowired
     LoginService loginService;
-
+    String ip = "";
     String qqNumber="";
     //点击使用QQ登录之后，RP使用302让用户转向QQ登录页面
     @RequestMapping("/toOauthQQLogin")
     @ResponseBody
     public String toQQLogin(HttpServletResponse response){
+        InetAddress ia = null;
+        try {
+            ia = InetAddress.getLocalHost();
+            ip = ia.getHostAddress();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         String state = RandomStringUtils.randomAlphanumeric(16);
+
         try {
             OAuthClientRequest request = OAuthClientRequest
-                    .authorizationLocation(Constant.authorizationLocation)
+                    .authorizationLocation(Constant.authorizationLocation.replace("localhost",ip))
                     .setResponseType(OAuth.OAUTH_CODE)
                     .setClientId(Constant.clientId)
-                    .setRedirectURI(Constant.codeRedirectURI)
+                    .setRedirectURI(Constant.codeRedirectURI.replace("localhost",ip))
                     .setState(state)
                     .buildQueryMessage();
             //把state放进cookie里
@@ -67,46 +78,42 @@ public class oauthLoginController {
 
     //RP收到code和state后，检查state并用code去交换token
     @RequestMapping("/authorize/qq_callback")
+    @ResponseBody
     public String getToken(HttpServletRequest request){
         OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
         OAuthAuthzResponse response = null;
         try {
             response = OAuthAuthzResponse.oauthCodeAuthzResponse(request);
             String code = response.getCode();
-            OAuthClientRequest oAuthClientRequest = OAuthClientRequest.tokenLocation(Constant.accessTokenUrl)
+            OAuthClientRequest oAuthClientRequest = OAuthClientRequest.tokenLocation(Constant.accessTokenUrl.replace("localhost",ip))
                     .setGrantType(GrantType.AUTHORIZATION_CODE)
                     .setClientId(Constant.clientId)
                     .setClientSecret(Constant.clientSecret)
                     .setCode(code)
-                    .setRedirectURI(Constant.tokenRedirectURI)
+                    .setRedirectURI(Constant.tokenRedirectURI.replace("localhost",ip))
                     .buildQueryMessage();
             //用request去请求token并返回
             OAuthAccessTokenResponse oAuthAccessTokenResponse = oAuthClient.accessToken(oAuthClientRequest,OAuth.HttpMethod.POST);
             String accessToken = oAuthAccessTokenResponse.getAccessToken();
             //本来应该检验token是否过期
-            return "redirect:/authorize/getUserInfo?accessToken="+accessToken;
+            //不应该return redirect，因为accesstoken不能暴露给用户，因此通过accessToken获取userInfo的操作直接在这个请求里面完成
+            OAuthClient client = new OAuthClient(new URLConnectionClient());
+            try {
+                OAuthClientRequest clientRequest = new OAuthBearerClientRequest(Constant.userInfoUrl.replace("localhost",ip))
+                        .setAccessToken(accessToken).buildQueryMessage();
+                OAuthResourceResponse resourceResponse = client.resource(clientRequest,OAuth.HttpMethod.GET,OAuthResourceResponse.class);
+                String currentQqNumber = resourceResponse.getBody();
+                qqNumber = currentQqNumber;
+                return  "suc";
+            } catch (OAuthSystemException | OAuthProblemException e) {
+                e.printStackTrace();
+            }
+            return "error";
         }
         catch (OAuthProblemException | OAuthSystemException e){
             e.printStackTrace();
             return "error";
         }
-    }
-
-    @RequestMapping("/authorize/getUserInfo")
-    @ResponseBody
-    public String getUserInfo(String accessToken,HttpSession session){
-        OAuthClient client = new OAuthClient(new URLConnectionClient());
-        try {
-            OAuthClientRequest clientRequest = new OAuthBearerClientRequest(Constant.userInfoUrl)
-                    .setAccessToken(accessToken).buildQueryMessage();
-            OAuthResourceResponse resourceResponse = client.resource(clientRequest,OAuth.HttpMethod.GET,OAuthResourceResponse.class);
-            String currentQqNumber = resourceResponse.getBody();
-            qqNumber = currentQqNumber;
-            return  "登录成功，请关闭页面";
-        } catch (OAuthSystemException | OAuthProblemException e) {
-            e.printStackTrace();
-        }
-        return "error";
     }
 
     @RequestMapping("/register")
