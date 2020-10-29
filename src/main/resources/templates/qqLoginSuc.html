@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8" />
+    <!-- //for-mobile-apps -->
+    <link th:href="@{~/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all" />
+    <link th:href="@{~/css/style.css}" rel="stylesheet" type="text/css" media="all" />
+    <!-- js -->
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <!-- //js -->
+    <link rel="stylesheet" type="text/css" th:href="@{~/css/jquery-ui.css}">
+    <!-- for bootstrap working -->
+    <script type="text/javascript" th:src="@{~/js/bootstrap-3.1.1.min.js}"></script>
+    <!-- //for bootstrap working -->
+    <!-- 微信 JS-SDK 如果不需要兼容小程序，则无需引用此 JS 文件。 -->
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+    <!-- uni 的 SDK，必须引用。 -->
+    <script type="text/javascript" src="https://js.cdn.aliyun.dcloud.net.cn/dev/uni-app/uni.webview.1.5.1.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <title>myQQ</title>
+
+</head>
+<body>
+</body>
+<script>
+
+    if(isPC()) {
+        window.self.close();
+        window.opener.location = "http://localhost:8080/index#/pages/index/index?login=success";
+    }
+    else {
+        document.addEventListener('UniAppJSBridgeReady', function () {
+            uni.postMessage({
+                data: {
+                    msg: "loginSuc"
+                }
+            });
+        })
+    }
+
+
+    function isPC() {
+        var userAgentInfo = navigator.userAgent;
+        var Agents = ["Android", "iPhone",
+            "SymbianOS", "Windows Phone",
+            "iPad", "iPod"];
+        var flag = true;
+        for (var v = 0; v < Agents.length; v++) {
+            if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
+
+</script>
+</html>

@@ -3,8 +3,10 @@ package com.circles.bookstore.controller.oauthController;
 import com.alibaba.fastjson.JSONObject;
 import com.circles.bookstore.bean.Customer;
 import com.circles.bookstore.bean.User;
+import com.circles.bookstore.bean.oauthClient.AuthToken;
 import com.circles.bookstore.bean.oauthClient.Constant;
 import com.circles.bookstore.service.LoginService;
+import com.circles.bookstore.service.ShiroService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.oltu.oauth2.as.response.OAuthASResponse;
 import org.apache.oltu.oauth2.client.OAuthClient;
@@ -19,6 +21,9 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 这个controller属于RP
@@ -42,8 +49,12 @@ import java.net.InetAddress;
 public class oauthLoginController {
     @Autowired
     LoginService loginService;
+    @Autowired
+    ShiroService shiroService;
+
     String ip = "";
     String qqNumber="";
+    String token="";
     //点击使用QQ登录之后，RP使用302让用户转向QQ登录页面
     @RequestMapping("/toOauthQQLogin")
     @ResponseBody
@@ -78,7 +89,6 @@ public class oauthLoginController {
 
     //RP收到code和state后，检查state并用code去交换token
     @RequestMapping("/authorize/qq_callback")
-    @ResponseBody
     public String getToken(HttpServletRequest request){
         OAuthClient oAuthClient = new OAuthClient(new URLConnectionClient());
         OAuthAuthzResponse response = null;
@@ -102,9 +112,17 @@ public class oauthLoginController {
                 OAuthClientRequest clientRequest = new OAuthBearerClientRequest(Constant.userInfoUrl.replace("localhost",ip))
                         .setAccessToken(accessToken).buildQueryMessage();
                 OAuthResourceResponse resourceResponse = client.resource(clientRequest,OAuth.HttpMethod.GET,OAuthResourceResponse.class);
+
+                //以下逻辑与OAuth没有关系了
                 String currentQqNumber = resourceResponse.getBody();
                 qqNumber = currentQqNumber;
-                return  "suc";
+                token = shiroService.createToken();
+                shiroService.saveToken(qqNumber,token);
+                //shiro相关操作，即本应该放在/login请求里面的shiro相关的操作
+                Subject subject = SecurityUtils.getSubject();
+                UsernamePasswordToken upToken = new AuthToken(token);
+                subject.login(upToken);
+                return  "qqLoginSuc";
             } catch (OAuthSystemException | OAuthProblemException e) {
                 e.printStackTrace();
             }
@@ -126,12 +144,26 @@ public class oauthLoginController {
 
     @RequestMapping("/checkLogin")
     @ResponseBody
-    public String checkLogin(HttpSession session){
-        // String username = jsonObject.getString("username")
-        if(qqNumber!="")
-            return qqNumber;
-        else
+    public Object checkLogin(){
+        Map<String,String> result = new HashMap<>();
+        if(qqNumber!=""){
+            result.put("qqNumber",qqNumber);
+            result.put("token",token);
+            return result;
+        }
+        else {
             return "error";
+        }
     }
+
+    @RequestMapping("/checkRole")
+    @ResponseBody
+    public Object checkRole(String token){
+        Map<String,String> result = new HashMap<>();
+        String currentQQ = shiroService.getQQByToken(token);
+        return result;
+    }
+
+
 }
 
