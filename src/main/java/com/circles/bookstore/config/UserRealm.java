@@ -24,7 +24,7 @@ public class UserRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         simpleAuthorizationInfo.addRole(role);
         System.out.println("执行授权");
-        return null;
+        return simpleAuthorizationInfo;
     }
 
     //认证,获取传过来的token，然后根据token获得qq，最后返回info
