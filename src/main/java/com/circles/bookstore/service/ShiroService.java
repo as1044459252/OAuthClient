@@ -5,6 +5,7 @@ import com.circles.bookstore.bean.Customer;
 import com.circles.bookstore.mapper.LoginMapper;
 import com.circles.bookstore.mapper.ShiroMapper;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class ShiroService {
         return token;
     }
 
+
     public void saveToken(String qqNumber,String token){
         String oldToken = shiroMapper.findTokenByQQ(qqNumber);
         if(oldToken==null){
@@ -34,4 +36,10 @@ public class ShiroService {
     public String getQQByToken(String token){
         return shiroMapper.findQQByToken(token);
     }
+
+    public String findAuthorityByQQ(String qqNumber){
+        return shiroMapper.findAuthorityByQQ(qqNumber);
+    }
+
+
 }

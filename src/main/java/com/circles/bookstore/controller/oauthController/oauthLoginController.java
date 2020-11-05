@@ -23,6 +23,7 @@ import org.apache.oltu.oauth2.common.message.OAuthResponse;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -119,9 +120,9 @@ public class oauthLoginController {
                 token = shiroService.createToken();
                 shiroService.saveToken(qqNumber,token);
                 //shiro相关操作，即本应该放在/login请求里面的shiro相关的操作
-                Subject subject = SecurityUtils.getSubject();
+                /*Subject subject = SecurityUtils.getSubject();
                 UsernamePasswordToken upToken = new AuthToken(token);
-                subject.login(upToken);
+                subject.login(upToken);*/
                 return  "qqLoginSuc";
             } catch (OAuthSystemException | OAuthProblemException e) {
                 e.printStackTrace();
@@ -142,9 +143,34 @@ public class oauthLoginController {
         return "registing...";
     }
 
+    //使用@RequireRoles一直失效，因此凑合着在这里实现授权
     @RequestMapping("/checkLogin")
     @ResponseBody
-    public Object checkLogin(){
+    public Object checkLogin(String token){
+        //到这里已经走过认证了，所以获取的subject中就有信息
+        Subject subject = SecurityUtils.getSubject();
+        String currentQQ = subject.getPrincipal().toString();
+        String role = "";
+        if(subject.hasRole("admin")){
+            role = "admin";
+        }
+        else
+            role = "user";
+        Map<String,String> result = new HashMap<>();
+        if(qqNumber!=""){
+            result.put("qqNumber",currentQQ);
+            result.put("token",token);
+            result.put("role",role);
+            return result;
+        }
+        else {
+            return "error";
+        }
+    }
+
+    @RequestMapping("/getLoginInfo")
+    @ResponseBody
+    public Object getLoginInfo(){
         Map<String,String> result = new HashMap<>();
         if(qqNumber!=""){
             result.put("qqNumber",qqNumber);
@@ -156,13 +182,6 @@ public class oauthLoginController {
         }
     }
 
-    @RequestMapping("/checkRole")
-    @ResponseBody
-    public Object checkRole(String token){
-        Map<String,String> result = new HashMap<>();
-        String currentQQ = shiroService.getQQByToken(token);
-        return result;
-    }
 
 
 }
